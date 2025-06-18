@@ -1,38 +1,106 @@
-.App {
-  text-align: center;
+/* General Reset */
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Comic Neue', cursive;
+  background: url('../styles/bg1.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Responsive Container */
+.app-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  min-height: 100vh;
 }
 
-.App-link {
-  color: #61dafb;
+.main-content {
+  flex: 1;
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 12px;
+  margin-top: 2rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.comic-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Form Layout */
+.comic-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+}
+
+/* Button */
+.comic-button {
+  background-color: #ffcc00;
+  color: black;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 1rem 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: 0.2s ease-in-out;
+}
+
+.comic-button:hover {
+  background-color: #ffdd33;
+}
+
+/* Footer */
+.comic-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #aaa;
+  margin-top: auto;
+}
+
+
+
+/* Responsive Typography */
+@media screen and (max-width: 768px) {
+  .comic-title {
+    font-size: 2rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .form-group {
+    flex: 1 1 100%;
+  }
+
+  .comic-button {
+    width: 100%;
   }
 }

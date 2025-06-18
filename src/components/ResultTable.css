@@ -1,0 +1,121 @@
+.result-container {
+  margin: 2rem auto;
+  max-width: 700px;
+  padding: 1.5rem;
+  background-color: #fff0f6;
+  border: 4px solid #22bc22;
+  border-radius: 12px;
+  box-shadow: 6px 6px 0 #ff9f1c;
+  overflow-x: auto;
+}
+
+.comic-heading {
+  font-family: 'Bangers', cursive;
+  font-size: 2rem;
+  color: #2ec4b6;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.comic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Comic Neue', cursive;
+  font-size: 1.1rem;
+  min-width: 400px; /* ensures horizontal scroll for small screens */
+}
+
+.comic-table th,
+.comic-table td {
+  padding: 0.8rem;
+  border: 2px solid #3a0ca3;
+  text-align: center;
+  word-break: break-word;
+}
+
+.comic-table th {
+  background-color: #ffbe0b;
+  color: #000;
+  font-family: 'Bangers', cursive;
+  font-size: 1.3rem;
+}
+
+.comic-table td {
+  background-color: #fefae0;
+}
+
+/* Button Styling */
+.comic-button {
+  background-color: #ff9f1c;
+  color: #fff;
+  font-family: 'Bangers', cursive;
+  font-size: 1.2rem;
+  border: 3px solid #001858;
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #2ec4b6;
+  transition: transform 0.1s ease;
+  margin: 1rem auto 0;
+  display: block;
+}
+
+.comic-button:hover {
+  transform: scale(1.05);
+}
+
+.footer-badge {
+  display: block; /* Or inline-block with text-align center in parent */
+  margin: 2rem auto 1rem; /* This centers horizontally */
+  padding: 0.6rem 1.2rem;
+  background-color: #ff9f1c;
+  color: #eee;
+  font-size: 1.5rem;
+  border: 2px solid #555;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 #22bc22;
+  text-align: center;
+  width: fit-content;
+}
+
+
+/* ✅ Responsive Enhancements */
+@media screen and (max-width: 768px) {
+  .result-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .comic-heading {
+    font-size: 1.5rem;
+  }
+
+  .comic-table {
+    font-size: 1rem;
+    min-width: 100%;
+  }
+
+  .comic-button {
+    width: 100%;
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .comic-heading {
+    font-size: 1.3rem;
+  }
+
+  .comic-table {
+    font-size: 0.95rem;
+  }
+
+  .comic-table th,
+  .comic-table td {
+    padding: 0.5rem;
+  }
+
+  .comic-button {
+    font-size: 1rem;
+  }
+}

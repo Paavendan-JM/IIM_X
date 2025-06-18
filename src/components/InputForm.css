@@ -1,0 +1,71 @@
+.comic-form {
+  background: #fff1e6;
+  border: 5px solid #ff9f1c;
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 60%;
+  max-width: 720px;
+  min-width: 320px;
+  border-radius: 20px;
+  font-family: 'Comic Neue', cursive;
+  box-shadow: 8px 8px 0 #cbf3f0;
+}
+
+.comic-heading {
+  font-family: 'Bangers', cursive;
+  font-size: 2rem;
+  color: #2ec4b6;
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.5rem;
+  border: 2px solid #ff9f1c;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Comic Neue', cursive;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+
+.comic-button {
+  background: #ffbf69;
+  border: 3px solid #ff9f1c;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.1rem;
+  font-family: 'Bangers', cursive;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: transform 0.1s;
+  display: block;
+  margin: 2rem auto 0;
+}
+
+.comic-button:hover {
+  transform: scale(1.05);
+}
