@@ -9,27 +9,36 @@ export function predictCalls(formData) {
     graduation: normalize(formData.graduation),
   };
 
+  const category = formData.category;
+
   const results = [
-    createResultRow("IIM Ahmedabad", calculateScoreForA(formData, normalized)),
-    createResultRow("IIM Bangalore", calculateScoreForB(formData, normalized)),
-    createResultRow("IIM Calcutta", calculateScoreForC(formData, normalized)),
-    createResultRow("IIM Lucknow", calculateScoreForL(formData, normalized)),
-    createResultRow("IIM Kozhikode", calculateScoreForK(formData, normalized)),
-    createResultRow("IIM Indore", calculateScoreForI(formData, normalized)),
+    createResultRow("IIM Ahmedabad", calculateScoreForA(formData, normalized), category),
+    createResultRow("IIM Bangalore", calculateScoreForB(formData, normalized), category),
+    createResultRow("IIM Calcutta", calculateScoreForC(formData, normalized), category),
+    createResultRow("IIM Lucknow", calculateScoreForL(formData, normalized), category),
+    createResultRow("IIM Kozhikode", calculateScoreForK(formData, normalized), category),
+    createResultRow("IIM Indore", calculateScoreForI(formData, normalized), category),
   ];
 
   return results;
 }
 
-function createResultRow(iim, score) {
-  return {
-    iim,
-    result: {
-      "Good": score >= 60,
-      "Average": score >= 70,
-      "Below Average": score >= 80,
-    },
+function createResultRow(iim, rawScore, category) {
+  const score = Number(rawScore.toFixed(3));
+  const cutoff = Number((cutoffs[iim][category] || 100).toFixed(3));
+  const diff = score - cutoff;
+
+  const result = {
+    "Low": false,
+    "Moderate": false,
+    "High": false,
   };
+
+  if (diff >= 0 && diff <= 7) result["Low"] = true;
+  else if (diff > 7 && diff <= 15) result["Moderate"] = true;
+  else if (diff > 15) result["High"] = true;
+
+  return { iim, score, result };
 }
 
 function normalize(percentile) {
@@ -49,7 +58,28 @@ function getWorkExMonths(label) {
   }
 }
 
-// ------- IIM-wise Scoring Logic (out of 100) -------
+const cutoffs = {
+  "IIM Ahmedabad": {
+    General: 61.0503, EWS: 55.7798, OBC: 52.4637, SC: 45.6321, ST: 39.8081, PWD: 27.8215,
+  },
+  "IIM Bangalore": {
+    General: 48.8695, EWS: 39.2903, OBC: 40.4451, SC: 34.0663, ST: 27.8257, PWD: 35.1605,
+  },
+  "IIM Calcutta": {
+    General: 52.743, EWS: 48.141, OBC: 45.4, SC: 39.003, ST: 33.302, PWD: 45.69608,
+  },
+  "IIM Lucknow": {
+    General: 48.80616, EWS: 35.4395, OBC: 38.28033, SC: 27.14991, ST: 19.40983, PWD: 18.736601,
+  },
+  "IIM Kozhikode": {
+    General: 62.42054, EWS: 55.09648, OBC: 54.34841, SC: 48.20149, ST: 42.65777, PWD: 45.69608,
+  },
+  "IIM Indore": {
+    General: 60.0112, EWS: 53.663, OBC: 51.504, SC: 46.9869, ST: 40.9503, PWD: 11.7512,
+  },
+};
+
+// --- Scoring Functions (unchanged except categoryBonus removed) ---
 
 function calculateScoreForA(data, n) {
   const catScore = (n.varc * 0.34 + n.dilr * 0.33 + n.qa * 0.33) * 0.6;
@@ -60,7 +90,6 @@ function calculateScoreForA(data, n) {
 
   return catScore + class10 + class12 + grad + diversity;
 }
-
 
 function calculateScoreForB(data, n) {
   const cat = n.overall * 0.45;

@@ -2,7 +2,7 @@ import React from 'react';
 import './ResultTable.css';
 
 const ResultTable = ({ predictions, onReset }) => {
-  const levels = ['Below Average', 'Average', 'Good'];
+  const levels = ['Low', 'Moderate', 'High'];
 
   return (
     <div className="result-container">
