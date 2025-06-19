@@ -13,37 +13,45 @@ export function predictCalls(formData) {
 
   const results = [
     createResultRow("IIM Ahmedabad", calculateScoreForA(formData, normalized), category),
-    createResultRow("IIM Bangalore", calculateScoreForB(formData, normalized), category),
+    createResultRowB("IIM Bangalore", calculateScoreForB(formData, normalized), category),
     createResultRow("IIM Calcutta", calculateScoreForC(formData, normalized), category),
     createResultRow("IIM Lucknow", calculateScoreForL(formData, normalized), category),
     createResultRow("IIM Kozhikode", calculateScoreForK(formData, normalized), category),
-    createResultRow("IIM Indore", calculateScoreForI(formData, normalized), category),
+    createResultRowI("IIM Indore", calculateScoreForI(formData, normalized), category),
   ];
 
   return results;
 }
 
+// --- Result Structuring ---
+
 function createResultRow(iim, rawScore, category) {
-  const score = Number(rawScore.toFixed(3));
+  const baseScore = Number(rawScore.toFixed(3));
   const cutoff = Number((cutoffs[iim][category] || 100).toFixed(3));
-  const diff = score - cutoff;
 
   const result = {
-    "Low": false,
-    "Moderate": false,
-    "High": false,
+    Average: getProbability(baseScore + 0.35 * 10 + 0.20 * 15 - cutoff),     // avg PI & WAT
+    Good: getProbability(baseScore + 0.35 * 20 + 0.20 * 25 - cutoff),        // good PI & WAT
+    Excellent: getProbability(baseScore + 0.35 * 30 + 0.20 * 35 - cutoff),   // excellent PI & WAT
   };
 
-  if (diff >= 0 && diff <= 7) result["Low"] = true;
-  else if (diff > 7 && diff <= 15) result["Moderate"] = true;
-  else if (diff > 15) result["High"] = true;
-
-  return { iim, score, result };
+  return { iim, result };
 }
+
+function getProbability(diff) {
+  if (diff < 0) return "-";
+  if (diff <= 10) return "Low";
+  if (diff <= 18) return "Moderate";
+  return "High";
+}
+
+// --- Normalization ---
 
 function normalize(percentile) {
   return Math.min(100, Math.max(0, percentile));
 }
+
+// --- Work Ex Utilities ---
 
 function getWorkExMonths(label) {
   switch (label) {
@@ -57,6 +65,19 @@ function getWorkExMonths(label) {
     default: return 0;
   }
 }
+
+function calculateWorkExBonus(workexMonths) {
+  if (workexMonths < 6) return 0;
+  else if (workexMonths >= 6 && workexMonths < 12) return 1;
+  else if (workexMonths >= 12 && workexMonths < 18) return 2;
+  else if (workexMonths >= 18 && workexMonths < 24) return 3;
+  else if (workexMonths >= 24 && workexMonths < 30) return 5;
+  else if (workexMonths >= 30 && workexMonths < 36) return 2;
+  else if (workexMonths >= 36) return 0;
+  else return 0;
+}
+
+// --- Cutoff Data ---
 
 const cutoffs = {
   "IIM Ahmedabad": {
@@ -79,7 +100,7 @@ const cutoffs = {
   },
 };
 
-// --- Scoring Functions (unchanged except categoryBonus removed) ---
+// --- IIM Score Calculators before PI and WAT ---
 
 function calculateScoreForA(data, n) {
   const catScore = (n.varc * 0.34 + n.dilr * 0.33 + n.qa * 0.33) * 0.6;
@@ -87,18 +108,17 @@ function calculateScoreForA(data, n) {
   const class12 = n.class12 * 0.1;
   const grad = n.graduation * 0.1;
   const diversity = data.gender !== "male" || data.background !== "engineering" ? 5 : 0;
-
   return catScore + class10 + class12 + grad + diversity;
 }
 
 function calculateScoreForB(data, n) {
-  const cat = n.overall * 0.45;
-  const acad = (n.class10 + n.class12) * 0.1;
-  const grad = n.graduation * 0.15;
-  const diversity = data.gender !== "male" ? 5 : 0;
+  const cat = (n.varc * 0.0875 + n.dilr * 0.10 + n.qa * 0.0625);
+  const acad = (n.class10 + n.class12) * 0.05;
+  const grad = n.graduation * 0.05;
   const certs = data.hasCertification ? 2 : 0;
-
-  return cat + acad + grad + diversity + certs;
+  const workexMonths = getWorkExMonths(data.workex);
+  const workexBonus = calculateWorkExBonus(workexMonths) * 2;
+  return cat + acad + grad + certs  + workexBonus;
 }
 
 function calculateScoreForC(data, n) {
@@ -107,7 +127,6 @@ function calculateScoreForC(data, n) {
   const class12 = n.class12 * 0.1;
   const grad = n.graduation * 0.2;
   const diversity = data.gender !== "male" ? 3 : 0;
-
   return cat + class10 + class12 + grad + diversity;
 }
 
@@ -116,29 +135,55 @@ function calculateScoreForL(data, n) {
   const academics = (n.class10 + n.class12 + n.graduation) / 3 * 0.25;
   const diversity = data.gender !== "male" ? 4 : 0;
   const certs = data.hasCertification ? 2 : 0;
-
   return cat + academics + diversity + certs;
 }
 
 function calculateScoreForK(data, n) {
-  const catScore = (n.overall / 100) * 50;
-  const class10Score = (n.class10 / 100) * 15;
-  const class12Score = (n.class12 / 100) * 20;
-
-  const genderBonus = data.gender === 'female' ? 10 : 0;
-  const academicDiversity = data.background !== 'engineering' ? 5 : 0;
-
+  const indexScore = n.overall * 0.35;
+  const resumeRaw = data.hasCertification ? 4 : 0;
+  const resumeScore = resumeRaw * 0.1;
+  const genderBonus = data.gender === 'female' ? 5 : 0;
+  const academicDiversity = data.background !== 'engineering' ? 2.5 : 0;
   const workexMonths = getWorkExMonths(data.workex);
-  const workexBonus = workexMonths >= 12 ? 5 : 0;
+  const workexBonus = calculateWorkExBonus(workexMonths);
+  const base = indexScore + resumeScore + genderBonus + academicDiversity + workexBonus;
 
-  return catScore + class10Score + class12Score + genderBonus + academicDiversity + workexBonus;
+  return base;
 }
 
 function calculateScoreForI(data, n) {
-  const cat = n.overall * 0.45;
-  const grad = n.graduation * 0.25;
+  const cat = ((n.varc * 0.1875)/3 + (n.dilr * 0.09375)/3  + (n.qa * 0.09375)/3 );
+  const class10 = n.class10 * 0.125;
   const diversity = data.gender !== "male" ? 3 : 0;
   const backgroundBonus = data.background !== "engineering" ? 2 : 0;
+  return cat + class10 + diversity + backgroundBonus;
+}
 
-  return cat + grad + diversity + backgroundBonus;
+
+// --- IIM Score Calculators after PI and WAT ---
+
+function createResultRowB(iim, rawScore, category) {
+  const baseScore = Number(rawScore.toFixed(3));
+  const cutoff = Number((cutoffs[iim][category] || 100).toFixed(3));
+
+  const result = {
+    Average: getProbability(baseScore + 11 + 4 - cutoff),     // avg PI & WAT
+    Good: getProbability(baseScore + 19 + 6 - cutoff),        // good PI & WAT
+    Excellent: getProbability(baseScore + 25 + 8 - cutoff),   // excellent PI & WAT
+  };
+
+  return { iim, result };
+}
+
+function createResultRowI(iim, rawScore, category) {
+  const baseScore = Number(rawScore.toFixed(3));
+  const cutoff = Number((cutoffs[iim][category] || 100).toFixed(3));
+
+  const result = {
+    Average: getProbability(baseScore + 11 + 4 - cutoff),     // avg PI & WAT
+    Good: getProbability(baseScore + 19 + 6 - cutoff),        // good PI & WAT
+    Excellent: getProbability(baseScore + 25 + 8 - cutoff),   // excellent PI & WAT
+  };
+
+  return { iim, result };
 }
