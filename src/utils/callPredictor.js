@@ -112,13 +112,16 @@ function calculateScoreForA(data, n) {
 }
 
 function calculateScoreForB(data, n) {
-  const cat = (n.varc * 0.0875 + n.dilr * 0.10 + n.qa * 0.0625);
-  const acad = (n.class10 + n.class12) * 0.05;
-  const grad = n.graduation * 0.05;
-  const certs = data.hasCertification ? 2 : 0;
+  const cat = (n.varc * 0.19 + n.dilr * 0.21 + n.qa * 0.15);
+  const acad = (n.class10 + n.class12) * 0.1;
+  const grad = n.graduation * 0.1;
+  const certs = data.hasCertification ? 10 : 0;
   const workexMonths = getWorkExMonths(data.workex);
   const workexBonus = calculateWorkExBonus(workexMonths) * 2;
-  return cat + acad + grad + certs  + workexBonus;
+  const extra = max(workexBonus,certs);
+  const diversity = data.gender !== "male" ? 5 : 0;
+  const final = cat + acad + grad + extra + diversity;
+  return final;
 }
 
 function calculateScoreForC(data, n) {
@@ -145,9 +148,9 @@ function calculateScoreForK(data, n) {
   const academicDiversity = data.background !== 'engineering' ? 2.5 : 0;
   const workexMonths = getWorkExMonths(data.workex);
   const workexBonus = calculateWorkExBonus(workexMonths);
-  const base = indexScore + resumeRaw + genderBonus + academicDiversity + workexBonus;
-
-  return base;
+  const extra = max(genderBonus,academicDiversity);
+  const final = indexScore + resumeRaw + + extra + workexBonus;
+  return final;
 }
 
 function calculateScoreForI(data, n) {
@@ -188,121 +191,3 @@ function createResultRowI(iim, rawScore, category) {
 }
 
 
-//Logic - CS Before and after PI
-const weightage = {
-  "IIM Ahmedabad": { //yet to update
-    //CS (Composite Score) before PI = (0.35 * (A + B + C + D + E))+ (0.65 * Normalised CAT overall score)
-    //CS (Composite Score) = ARF_CS * Normalised AR score + CATF_CS * Normalised overall score in CAT-2024
-    dilrScore : 0,
-    varcScore : 0,
-    qaScore : 0,
-    OverallScore : 0.65,
-    class10Score : 0.10, // A
-    class12Score : 0.10, // B
-    graduationScore : 0.10, // C
-    workExScore : 0.05, // D 
-    genderScore : 2, // E
-    acadDivScore :  30,
-    //FCS = PIF * Normalised PI Score + AWTF * Normalised AWT Score + CATF_FCS * Normalised CAT Score + ARF_FCS * Normalised AR Score
-    piScore : 0.50, //after PI use this
-    watScore : 0.10,
-    OverallScore_PI : 0.25,
-    nirf: 2,
-  },
-  "IIM Bangalore": {
-    dilrScore : 0.21,
-    varcScore :0.19,
-    qaScore : 0.15,
-    OverallScore : 0,
-    class10Score : 0.10, 
-    class12Score : 0.10, 
-    graduationScore : 0.1, 
-    workExScore : 0.1, 
-    certificationScore : 10, //not percent (cerftifiaction or work ex)
-    genderScore : 5, // not percent
-    acadDivScore :  0,
-    dilrScore_PI : 0.1,//after PI use this
-    varcScore_PI :0.0875,
-    qaScore_PI : 0.0625,
-    workExScore_PI : 0.1,
-    piScore : 0.40,
-    watScore : 0.10,    
-    class10Score_PI : 0.05, 
-    class12Score_PI : 0.05,
-    certificationScore_PI : 10, //not percent (cerftifiaction or work ex)
-  },
-  "IIM Calcutta": {
-    dilrScore :0,
-    varcScore :0,
-    qaScore : 0,
-    OverallScore : 0.56, // (mark / total * 56)
-    class10Score : 0.10, 
-    class12Score : 0.15, 
-    graduationScore : 0, 
-    workExScore : 0, 
-    certificationScore : 0,
-    genderScore : 4, // not percent
-    acadDivScore :  0,
-    OverallScore_PI : 0.30, //after PI use this
-    workExScore_PI : 0.08,
-    piScore : 0.48,
-    watScore : 0.08,
-    acadDivScore_PI :  6, // not percent
-  },
-  "IIM Lucknow": {
-    dilrScore :0,
-    varcScore :0,
-    qaScore : 0,
-    OverallScore : 0.60, // (mark / total * 60)
-    class10Score : 0, 
-    class12Score : 0.10, 
-    graduationScore : 0.10, 
-    workExScore : 0.1, 
-    certificationScore : 0,
-    genderScore : 0.05,
-    acadDivScore :  0.05,
-    OverallScore_PI : 0.30, //after PI use this
-    genderScore_PI : 0.025,
-    acadDivScore_PI:  0.025,
-    workExScore_PI : 0.05,
-    piScore : 0.4,
-    watScore : 0.1,
-    class12Score : 0.05, 
-    graduationScore : 0.05,
-  },
-  "IIM Kozhikode": {
-    dilrScore :0,
-    varcScore :0,
-    qaScore : 0,
-    OverallScore : 0.50,
-    class10Score : 0.15, 
-    class12Score : 0.20, 
-    graduationScore : 0, 
-    workExScore : 0.05, 
-    certificationScore : 4, //not percent
-    genderScore : 0.1,
-    acadDivScore :  0.05,
-    OverallScore_PI : 0.50, //aafter PI use this
-    piScore : 0.1,
-    watScore : 0.2,
-    nirf: 4, //not percent
-    certificationScore_PI : 4, //not percent
-  },
-  "IIM Indore": {//yet to update
-    dilrScore :0,
-    varcScore :0,
-    qaScore : 0,
-    OverallScore : 0.50,
-    class10Score : 0.15, 
-    class12Score : 0.20, 
-    graduationScore : 0, 
-    workExScore : 0.05, 
-    certificationScore : 4, //not percent
-    genderScore : 0.1,
-    acadDivScore :  0.05,
-    OverallScore_PI : 0.50, //aafter PI use this
-    piScore : 0.1,
-    watScore : 0.2,
-    nirf: 4, //not percent
-  }
-};
