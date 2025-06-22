@@ -3,19 +3,31 @@ import './InputForm.css';
 
 const InputForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-    varc: '',
-    dilr: '',
-    qa: '',
-    overall: '',
-    class10: '',
-    class12: '',
-    graduation: '',
-    category: '',
-    gender: '',
-    background: '',
-    workex: '',
-    hasCertification: false,
-  });
+      // Scores
+      varcScore: '',
+      dilrScore: '',
+      qaScore: '',
+      overallScore: '',
+
+      // Percentiles
+      varc: '',
+      dilr: '',
+      qa: '',
+      overall: '',
+
+      // Academics
+      class10: '',
+      class12: '',
+      graduation: '',
+
+      // Other Details
+      category: '',
+      gender: '',
+      background: '',
+      workex: '',
+      hasCertification: '',
+    });
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,6 +46,25 @@ const InputForm = ({ onSubmit }) => {
     <form className="comic-form" onSubmit={handleSubmit}>
       <h2 className="comic-heading">Enter Your Details</h2>
       <br></br>
+      {/* CAT Scores */}
+      <div className="form-row">
+        <div className="form-group">
+          <label>VARC Score</label>
+          <input type="number" name="varcScore" value={formData.varcScore} onChange={handleChange} required />
+        </div>
+        <div className="form-group">
+          <label>DILR Score</label>
+          <input type="number" name="dilrScore" value={formData.dilrScore} onChange={handleChange} required />
+        </div>
+        <div className="form-group">
+          <label>QA Score</label>
+          <input type="number" name="qaScore" value={formData.qaScore} onChange={handleChange} required />
+        </div>
+        <div className="form-group">
+          <label>Overall Score</label>
+          <input type="number" name="overallScore" value={formData.overallScore} onChange={handleChange} required />
+        </div>
+      </div>
       {/* CAT Sectionals */}
       <div className="form-row">
         <div className="form-group">
@@ -128,7 +159,14 @@ const InputForm = ({ onSubmit }) => {
   </div>
 </div>
 
-      <button className="comic-button" type="submit">Predict Calls 🚀</button>
+      <div className="form-row" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+  <button className="comic-button" type="submit">Predict Calls 🚀</button>
+  <button className="comic-button" type="button" onClick={() => onSubmit(formData, 'seat')}>
+    Predict Seat 🎯
+  </button>
+</div>
+
+
     </form>
   );
 };

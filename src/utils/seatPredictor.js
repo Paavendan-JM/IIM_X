@@ -1,6 +1,6 @@
-// callPredictor.js
+// seatPredictor.js
 
-export function predictCalls(formData) {
+export function predictSeats(formData) {
   const normalized = {
     varc: normalize(formData.varc),
     dilr: normalize(formData.dilr),
@@ -14,22 +14,15 @@ export function predictCalls(formData) {
   const category = formData.category;
 
   const results = [
-    createResultRowA("IIM Ahmedabad", calculateScoreForA(formData, normalized), category),
-    createResultRowB("IIM Bangalore", calculateScoreForB(formData, normalized), category),
-    createResultRowC("IIM Calcutta", calculateScoreForC(formData, normalized), category),
-    createResultRowL("IIM Lucknow", calculateScoreForL(formData, normalized), category),
-    createResultRowK("IIM Kozhikode", calculateScoreForK(formData, normalized), category),
-    createResultRowI("IIM Indore", calculateScoreForI(formData, normalized), category),
+    createFutureResultRowA("IIM Ahmedabad", calculateSeatScoreForA(formData, normalized), category),
+    createFutureResultRowB("IIM Bangalore", calculateSeatScoreForB(formData, normalized), category),
+    createFutureResultRowC("IIM Calcutta", calculateSeatScoreForC(formData, normalized), category),
+    createFutureResultRowL("IIM Lucknow", calculateSeatScoreForL(formData, normalized), category),
+    createFutureResultRowK("IIM Kozhikode", calculateSeatScoreForK(formData, normalized), category),
+    createFutureResultRowI("IIM Indore", calculateSeatScoreForI(formData, normalized), category),
   ];
 
   return results;
-}
-
-function getProbability(diff) {
-  if (diff < 0) return "-";
-  if (diff <= 10) return "Low";
-  if (diff <= 18) return "Moderate";
-  return "High";
 }
 
 function normalize(percentile) {
@@ -80,7 +73,23 @@ const cutoffs = {
   },
 };
 
-function calculateScoreForA(data, n) {
+function getProbability(diff) {
+  if (diff < 0) return "-";
+  if (diff <= 10) return "Low";
+  if (diff <= 18) return "Moderate";
+  return "High";
+}
+
+function calculateSeatScoreForA(data, n) {
+  const cat = n.overall * 0.5;
+  const class10 = n.class10 * 0.1;
+  const class12 = n.class12 * 0.1;
+  const grad = n.graduation * 0.2;
+  const diversity = data.gender !== "male" ? 3 : 0;
+  return cat + class10 + class12 + grad + diversity;
+}
+
+function calculateSeatScoreForB(data, n) {
   const catScore = (n.varc * 0.34 + n.dilr * 0.33 + n.qa * 0.33) * 0.6;
   const class10 = n.class10 * 0.1;
   const class12 = n.class12 * 0.1;
@@ -89,7 +98,15 @@ function calculateScoreForA(data, n) {
   return catScore + class10 + class12 + grad + diversity;
 }
 
-function calculateScoreForB(data, n) {
+function calculateSeatScoreForC(data, n) {
+  const cat = n.overall * 0.45;
+  const academics = (n.class10 + n.class12 + n.graduation) / 3 * 0.25;
+  const diversity = data.gender !== "male" ? 4 : 0;
+  const certs = data.hasCertification ? 2 : 0;
+  return cat + academics + diversity + certs;
+}
+
+function calculateSeatScoreForL(data, n) {
   const cat = (n.varc * 0.19 + n.dilr * 0.21 + n.qa * 0.15);
   const acad = (n.class10 + n.class12) * 0.1;
   const grad = n.graduation * 0.1;
@@ -101,24 +118,7 @@ function calculateScoreForB(data, n) {
   return cat + acad + grad + extra + diversity;
 }
 
-function calculateScoreForC(data, n) {
-  const cat = n.overall * 0.5;
-  const class10 = n.class10 * 0.1;
-  const class12 = n.class12 * 0.1;
-  const grad = n.graduation * 0.2;
-  const diversity = data.gender !== "male" ? 3 : 0;
-  return cat + class10 + class12 + grad + diversity;
-}
-
-function calculateScoreForL(data, n) {
-  const cat = n.overall * 0.45;
-  const academics = (n.class10 + n.class12 + n.graduation) / 3 * 0.25;
-  const diversity = data.gender !== "male" ? 4 : 0;
-  const certs = data.hasCertification ? 2 : 0;
-  return cat + academics + diversity + certs;
-}
-
-function calculateScoreForK(data, n) {
+function calculateSeatScoreForK(data, n) {
   const indexScore = n.overall * 0.35;
   const resumeRaw = data.hasCertification ? 4 : 0;
   const genderBonus = data.gender === 'female' ? 5 : 0;
@@ -129,7 +129,7 @@ function calculateScoreForK(data, n) {
   return indexScore + resumeRaw + extra + workexBonus;
 }
 
-function calculateScoreForI(data, n) {
+function calculateSeatScoreForI(data, n) {
   const cat = ((n.varc * 0.1875)/3 + (n.dilr * 0.09375)/3  + (n.qa * 0.09375)/3 );
   const class10 = n.class10 * 0.125;
   const diversity = data.gender !== "male" ? 3 : 0;
@@ -151,9 +151,9 @@ function createResultRow(iim, rawScore, category) {
   };
 }
 
-const createResultRowA = createResultRow;
-const createResultRowB = createResultRow;
-const createResultRowC = createResultRow;
-const createResultRowL = createResultRow;
-const createResultRowK = createResultRow;
-const createResultRowI = createResultRow;
+const createFutureResultRowA = createResultRow;
+const createFutureResultRowB = createResultRow;
+const createFutureResultRowC = createResultRow;
+const createFutureResultRowL = createResultRow;
+const createFutureResultRowK = createResultRow;
+const createFutureResultRowI = createResultRow;

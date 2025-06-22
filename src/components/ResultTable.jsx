@@ -1,12 +1,12 @@
 import React from 'react';
 import './ResultTable.css';
 
-const ResultTable = ({ predictions, onReset }) => {
+const ResultTable = ({ title, predictions, onReset }) => {
   const scenarios = ['Average', 'Good', 'Excellent'];
 
   return (
     <div className="result-container">
-      <h2 className="comic-heading">Call Probability by PI Performance</h2>
+      <h2 className="comic-heading">{title}</h2>
 
       <table className="comic-table">
         <thead>
