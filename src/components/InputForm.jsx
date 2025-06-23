@@ -3,38 +3,15 @@ import './InputForm.css';
 
 const InputForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-      // Scores
-      varcScore: '',
-      dilrScore: '',
-      qaScore: '',
-      overallScore: '',
-
-      // Percentiles
-      varc: '',
-      dilr: '',
-      qa: '',
-      overall: '',
-
-      // Academics
-      class10: '',
-      class12: '',
-      graduation: '',
-
-      // Other Details
-      category: '',
-      gender: '',
-      background: '',
-      workex: '',
-      hasCertification: '',
-    });
-
+    varcScore: '', dilrScore: '', qaScore: '', overallScore: '',
+    varc: '', dilr: '', qa: '', overall: '',
+    class10: '', class12: '', graduation: '',
+    category: '', gender: '', background: '', workex: '', hasCertification: ''
+  });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
+    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleSubmit = (e) => {
@@ -44,7 +21,7 @@ const InputForm = ({ onSubmit }) => {
 
   return (
     <form className="comic-form" onSubmit={handleSubmit}>
-      <h2 className="comic-heading">Enter Your Details</h2>
+      <h2 className="comic-heading">Enter Your Details</h2><br />
       <br></br>
       {/* CAT Scores */}
       <div className="form-row">
@@ -159,14 +136,9 @@ const InputForm = ({ onSubmit }) => {
   </div>
 </div>
 
-      <div className="form-row" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-  <button className="comic-button" type="submit">Predict Calls 🚀</button>
-  <button className="comic-button" type="button" onClick={() => onSubmit(formData, 'seat')}>
-    Predict Seat 🎯
-  </button>
-</div>
-
-
+      <div className="form-row" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+        <button className="comic-button" type="submit">Submit 🚀</button>
+      </div>
     </form>
   );
 };

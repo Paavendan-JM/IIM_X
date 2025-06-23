@@ -1,68 +1,59 @@
+// App.js
 import React, { useState } from 'react';
 import InputForm from './components/InputForm';
 import ResultTable from './components/ResultTable';
+import InstructionModal from './components/InstructionModal';
 import { predictCalls } from './utils/callPredictor';
-import { predictSeats } from './utils/seatPredictor'; // make sure this file exists
+import { predictSeats } from './utils/seatPredictor';
 import './styles/ComicStyle.css';
 import './styles/Footer.css';
+import './components/InstructionModal.css'; // import modal styles
 
 function App() {
-  const [formData, setFormData] = useState(null);
-  const [predictions, setPredictions] = useState(null);
-  const [mode, setMode] = useState(null); // 'call' | 'seat'
+  const [resultRows, setResultRows] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(false);
 
-  const handleFormSubmit = (data) => {
-    setFormData(data);
-    setPredictions(null);
-    setMode(null);
-  };
+  const handleSubmit = (formData) => {
+    const callResults = predictCalls(formData);
+    const seatResults = predictSeats(formData);
 
-  const handlePredictCalls = () => {
-    if (formData) {
-      const result = predictCalls(formData);
-      setPredictions(result);
-      setMode('call');
-    }
-  };
+    const mergedResults = callResults.map(callEntry => {
+      const seatEntry = seatResults.find(s => s.iim === callEntry.iim);
+      return {
+        iim: callEntry.iim,
+        call: callEntry.call,
+        seat: seatEntry?.seat || {},
+      };
+    });
 
-  const handlePredictSeat = () => {
-    if (formData) {
-      const result = predictSeats(formData);
-      setPredictions(result);
-      setMode('seat');
-    }
+    setResultRows(mergedResults);
   };
 
   const handleReset = () => {
-    setFormData(null);
-    setPredictions(null);
-    setMode(null);
+    setResultRows(null);
   };
 
   return (
     <div className="app-wrapper">
       <main className="main-content">
         <h1 className="comic-title">IIM Call Predictor</h1>
-
-        {!formData ? (
-          <InputForm onSubmit={handleFormSubmit} />
-        ) : !predictions ? (
-          <div className="button-row" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
-            <button className="comic-button" onClick={handlePredictCalls}>🎯 Predict Calls</button>
-            <button className="comic-button" onClick={handlePredictSeat}>📊 Predict Seat</button>
-          </div>
+        
+        {!resultRows ? (
+          <InputForm onSubmit={handleSubmit} />
         ) : (
-          <ResultTable
-            title={mode === 'call' ? "Call Probability by PI Performance" : "Seat Prediction Based on Composite Score"}
-            predictions={predictions}
-            onReset={handleReset}
-          />
+          <>
+            <ResultTable predictions={resultRows} onReset={handleReset} onShowInstructions={() => setShowInstructions(true)} />
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            </div>
+          </>
         )}
       </main>
 
       <div className="footer-badge">
         Built with ❤️ by Paav • No data stored 🛡️
       </div>
+
+      {showInstructions && <InstructionModal onClose={() => setShowInstructions(false)} />}
     </div>
   );
 }
