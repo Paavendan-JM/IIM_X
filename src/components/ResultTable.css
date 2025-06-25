@@ -10,7 +10,7 @@
 }
 
 .comic-heading {
-  font-family: 'Bangers', cursive;
+  font-family: 'Comic Neue', sans-serif;
   font-size: 2rem;
   color: #2ec4b6;
   text-align: center;
@@ -20,7 +20,7 @@
 .comic-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: 'Comic Neue', cursive;
+  font-family: 'Comic Neue', sans-serif;
   font-size: 1.1rem;
   min-width: 400px; /* ensures horizontal scroll for small screens */
 }
@@ -36,7 +36,7 @@
 .comic-table th {
   background-color: #ffbe0b;
   color: #000;
-  font-family: 'Bangers', cursive;
+  font-family: 'Bangers', sans-serif;
   font-size: 1.3rem;
 }
 
@@ -48,7 +48,7 @@
 .comic-button {
   background-color: #ff9f1c;
   color: #fff;
-  font-family: 'Bangers', cursive;
+  font-family: 'Bangers', sans-serif;
   font-size: 1.2rem;
   border: 3px solid #001858;
   border-radius: 10px;

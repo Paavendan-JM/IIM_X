@@ -7,12 +7,12 @@
   max-width: 720px;
   min-width: 320px;
   border-radius: 20px;
-  font-family: 'Comic Neue', cursive;
+  font-family: 'Comic Neue', sans-serif;
   box-shadow: 8px 8px 0 #cbf3f0;
 }
 
 .comic-heading {
-  font-family: 'Bangers', cursive;
+  font-family: 'Comic Neue', sans-serif;
   font-size: 2rem;
   color: #2ec4b6;
   text-align: center;
@@ -47,7 +47,7 @@
   border: 2px solid #ff9f1c;
   border-radius: 8px;
   font-size: 1rem;
-  font-family: 'Comic Neue', cursive;
+  font-family: 'Comic Neue', sans-serif;
   box-sizing: border-box;
   width: 100%;
 }
@@ -58,7 +58,7 @@
   border: 3px solid #ff9f1c;
   padding: 0.8rem 1.5rem;
   font-size: 1.1rem;
-  font-family: 'Bangers', cursive;
+  font-family: 'Bangers', sans-serif;
   cursor: pointer;
   border-radius: 10px;
   transition: transform 0.1s;
