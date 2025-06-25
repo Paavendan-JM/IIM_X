@@ -22,7 +22,7 @@
   border-collapse: collapse;
   font-family: 'Comic Neue', sans-serif;
   font-size: 1.1rem;
-  min-width: 400px; /* ensures horizontal scroll for small screens */
+  min-width: 400px;
 }
 
 .comic-table th,
@@ -65,8 +65,8 @@
 }
 
 .footer-badge {
-  display: block; /* Or inline-block with text-align center in parent */
-  margin: 2rem auto 1rem; /* This centers horizontally */
+  display: block;
+  margin: 2rem auto 1rem;
   padding: 0.6rem 1.2rem;
   background-color: #ff9f1c;
   color: #eee;
@@ -78,21 +78,21 @@
   width: fit-content;
 }
 
-
 /* ✅ Responsive Enhancements */
 @media screen and (max-width: 768px) {
   .result-container {
     padding: 1rem;
     margin: 1rem;
+    overflow-x: auto;
   }
 
   .comic-heading {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .comic-table {
-    font-size: 1rem;
-    min-width: 100%;
+    font-size: 0.95rem;
+    min-width: 600px;
   }
 
   .comic-button {
@@ -102,20 +102,34 @@
 }
 
 @media screen and (max-width: 480px) {
+  .result-container {
+    padding: 0.8rem;
+  }
+
   .comic-heading {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .comic-table {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    min-width: 550px;
   }
 
   .comic-table th,
   .comic-table td {
-    padding: 0.5rem;
+    padding: 0.4rem;
+  }
+
+  .comic-table th {
+    font-size: 1rem;
   }
 
   .comic-button {
     font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .footer-badge {
+    font-size: 1.1rem;
   }
 }
